@@ -18,8 +18,11 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use stdClass;
 
 class UserResource extends Resource
 {
@@ -101,6 +104,16 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('No')->getStateUsing(
+                    static function (stdClass $rowLoop, HasTable $livewire): string {
+                        return (string) (
+                            $rowLoop->iteration +
+                            ($livewire->tableRecordsPerPage * (
+                                $livewire->page - 1
+                            ))
+                        );
+                    }
+                ),
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('email')->label('RFID')->searchable(),
                 Tables\Columns\TextColumn::make('detailUser.nik')->label('NIK')->searchable(),
@@ -127,7 +140,7 @@ class UserResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('user_is', 'user');
+        return parent::getEloquentQuery()->where('user_is', 'user')->orderBy('created_at', 'desc');
     }
 
     

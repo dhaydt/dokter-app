@@ -20,7 +20,7 @@ class CreateUser extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         // dd($data);
-        $data['password'] = Hash::make('12345678');
+        $data['password'] = Hash::make('123456');
         $detail = new DetailUser();
         $detail->save();
         $data['detail_id'] = $detail['id'];
@@ -43,6 +43,6 @@ class CreateUser extends CreateRecord
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return 'User registered successfully!';
+        return 'Pasien registration successful!, please complete the pasien details in edit pasien to be able to use the account!';
     }
 }
