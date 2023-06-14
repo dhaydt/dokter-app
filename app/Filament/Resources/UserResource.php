@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Filament\Resources\UserResource\RelationManagers\DetailUserRelationManager;
+use App\Models\DetailUser;
 use App\Models\User;
 use Faker\Core\Number;
 use Filament\Forms;
@@ -93,8 +94,6 @@ class UserResource extends Resource
                 // Forms\Components\TextInput::make('detail_id')
                 // ->label('')
                 // ->extraAttributes(['style' => 'display: none']),
-
-
             ]);
     }
 
@@ -114,6 +113,12 @@ class UserResource extends Resource
                 ViewAction::make()->label('')->tooltip('View Pasien'),
                 Tables\Actions\EditAction::make()->label('')->tooltip('Edit Pasien'),
                 DeleteAction::make()->label('')->tooltip('Delete Pasien')
+                ->before(function (DeleteAction $action, $record) {
+                    $detail = DetailUser::find($record['detail_id']);
+                    if($detail){
+                        $detail->delete();
+                    }
+                })
             ])
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),
