@@ -18,14 +18,14 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // $user = \App\Models\User::factory()->create([
-        //     'name' => 'dokter',
-        //     'email' => 'dokter@dokter.com',
-        //     'password' => Hash::make('dokterdokter')
-        // ]);
+        $user = \App\Models\User::factory()->create([
+            'name' => 'admin',
+            'email' => 'admin@admin.com',
+            'password' => Hash::make('adminadmin')
+        ]);
 
-        // $user = User::where('name', 'admin')->first();
-        // $role = Role::create(['name' => 'admin']);
-        // $user->assignRole($role);
+        $user = User::where('name', 'admin')->first();
+        $role = Role::create(['name' => 'admin']);
+        $user->assignRole($role);
     }
 }
