@@ -36,5 +36,5 @@ Route::get('/seed', function () {
     dd('seeded!');
 });
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('filament.auth.login');
 });
