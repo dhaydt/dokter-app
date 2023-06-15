@@ -24,6 +24,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'detail_id',
+        'user_is',
         'password',
     ];
 
@@ -54,5 +55,9 @@ class User extends Authenticatable implements FilamentUser
 
     public function detailUser(){
         return $this->belongsTo(DetailUser::class, 'detail_id');
+    }
+
+    public function detailDokter(){
+        return $this->belongsTo(DetailDokter::class, 'detail_id');
     }
 }

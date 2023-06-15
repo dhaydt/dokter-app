@@ -25,7 +25,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $check = User::where(['email' => $request->rfid, 'user_is' => 'user']);
+        $check = User::where(['email' => $request->rfid, 'user_is' => 'user'])->first();
         if(!$check){
             return response()
                 ->json(['status' => 'error', 'message' => 'RFID tidak ditemukan!'], 401);
@@ -66,10 +66,43 @@ class AuthController extends Controller
             //     }
 
             // }
-            return response()
-            ->json(['message' => 'Hi ' . $user->name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer']);
+            return response()->json(['message' => 'Halo ' . $user->name . ', Selamat datang..', 'access_token' => $token, 'token_type' => 'Bearer', 'user_is' => 'pasien']);
         }
         return response()
             ->json(['message' => 'Terjadi kesalahan, hubungi admin!']);
+    }
+    
+    public function loginDokter(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'rfid' => 'required',
+            'accesskey' => 'required|min:6'
+        ], [
+            'rfid.required' => 'Mohon masukan RFID!',
+            'accesskey.required' => 'Masukan Kode Akses!',
+            'accesskey.min' => 'Kode Akses Minimal 6 angka!',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $check = User::where(['email' => $request->rfid, 'user_is' => 'dokter'])->first();
+        if(!$check){
+            return response()
+                ->json(['status' => 'error', 'message' => 'RFID tidak ditemukan!'], 401);
+        }
+        if (!Auth::attempt(['email' => $request->rfid, 'password' => $request->accesskey])) {
+            return response()
+                ->json(['status' => 'error', 'message' => 'Kode Akses Salah!'], 401);
+        }
+
+        $user = User::where('email', $request['rfid'])->firstOrFail();
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        if($user['user_is'] == 'dokter'){
+            return response()->json(['message' => 'Halo ' . $user->name . ', Selamat datang..', 'access_token' => $token, 'token_type' => 'Bearer', 'user_is' => 'dokter']);
+        }
+        return response()->json(['message' => 'Terjadi kesalahan, hubungi admin!']);
     }
 }
