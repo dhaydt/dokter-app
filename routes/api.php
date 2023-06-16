@@ -24,6 +24,8 @@ Route::post('/login_dokter', [AuthController::class, 'loginDokter']);
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('profile_pasien', [UserController::class, 'profile']);
+    Route::get('rekam_medis', [UserController::class, 'rekam_medis']);
+
     Route::get('dokter_list', [ApiController::class, 'dokter_list']);
 
     Route::prefix('dokter')->group(function(){
