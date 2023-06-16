@@ -32,4 +32,8 @@ class Resep extends Model
     {
         return $this->belongsTo(User::class, 'dokter_id');
     }
+
+    public function history(){
+        return $this->hasMany(History::class);
+    }
 }

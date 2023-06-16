@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\HistoryResource\RelationManagers\HistoryRelationManager;
 use App\Filament\Resources\ResepResource\Pages;
 use App\Filament\Resources\ResepResource\RelationManagers;
+use App\Filament\Resources\ResepResource\RelationManagers\HistoryRelationManager as RelationManagersHistoryRelationManager;
 use App\Models\Obat;
 use App\Models\Resep;
 use App\Models\User;
@@ -136,7 +138,7 @@ class ResepResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagersHistoryRelationManager::class
         ];
     }
 

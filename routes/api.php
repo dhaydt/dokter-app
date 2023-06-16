@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DokterController;
 use App\Http\Controllers\Api\UserController;
@@ -23,6 +24,7 @@ Route::post('/login_dokter', [AuthController::class, 'loginDokter']);
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('profile_pasien', [UserController::class, 'profile']);
+    Route::get('dokter_list', [ApiController::class, 'dokter_list']);
 
     Route::prefix('dokter')->group(function(){
         Route::get('profile_dokter', [DokterController::class, 'profile']);
