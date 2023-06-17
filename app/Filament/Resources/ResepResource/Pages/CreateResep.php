@@ -33,14 +33,14 @@ class CreateResep extends CreateRecord
         // if($data['perhari'] == 2){
             // }
         $dateList = [$from];
-        $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai'])->subDay();
+        $fromNew = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai'])->subDays();
         $resep_id = Resep::orderBy('created_at', 'desc')->first();
         if(!$resep_id){
             $resep_id['id'] = 0;
         }
         $resep_id = $resep_id['id'] + 1;
         for($i = 1; $i < $total; $i++){
-            $added = $from->addDays($data['perhari']);
+            $added = $fromNew->addDays($data['perhari']);
             array_push($dateList, $added);
             $from = $added;
 

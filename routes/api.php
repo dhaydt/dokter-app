@@ -32,6 +32,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('dokter')->group(function(){
         Route::get('profile_dokter', [DokterController::class, 'profile']);
+        Route::get('list_pasien', [DokterController::class, 'pasien']);
+        Route::post('pasien_history', [DokterController::class, 'history']);
     });
     
 });

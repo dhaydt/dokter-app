@@ -28,6 +28,7 @@ class ResepResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-list';
     protected static ?string $navigationLabel = 'Resep';
+    protected static ?string $navigationGroup = 'Pasien';
 
     public static function form(Form $form): Form
     {
