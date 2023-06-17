@@ -85,7 +85,7 @@ class UserController extends Controller
                     'id' => $d['id'],
                     'hari_ke' => $d['hari_ke'],
                     'waktu_minum' => $d['waktu_minum'],
-                    'img' => getenv('APP_URL').'/storage/'.$d['img'],
+                    'img' => $d['img'] ? getenv('APP_URL').'/storage/'.$d['img'] : null,
                     'status' => $d['status'],
                     'expire' => $d['tanggal'],
                 ];
