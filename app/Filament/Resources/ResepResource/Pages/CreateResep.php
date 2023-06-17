@@ -30,9 +30,9 @@ class CreateResep extends CreateRecord
         $to = Carbon::createFromFormat('Y-m-d', $data['tgl_selesai']);
         $difference = $from->diff($to)->days;
         $total = $difference / $data['perhari'] / $data['dosis'];
-        if($data['perhari'] == 2){
-            $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai'])->addDay();
-        }
+        // if($data['perhari'] == 2){
+        //     $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai'])->addDay();
+        // }
         $dateList = [$from];
         $resep_id = Resep::orderBy('created_at', 'desc')->first();
         if(!$resep_id){
