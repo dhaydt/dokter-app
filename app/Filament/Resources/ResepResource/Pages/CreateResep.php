@@ -34,7 +34,10 @@ class CreateResep extends CreateRecord
             $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai'])->addDay();
         }
         $dateList = [$from];
-        $resep_id = Resep::orderBy('created_at', 'desc')->first() ?? 0;
+        $resep_id = Resep::orderBy('created_at', 'desc')->first();
+        if(!$resep_id){
+            $resep_id['id'] = 0;
+        }
         $resep_id = $resep_id['id'] + 1;
         for($i = 1; $i < $total; $i++){
             $added = $from->addDays($data['perhari']);
