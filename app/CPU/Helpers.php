@@ -7,14 +7,32 @@ use Illuminate\Support\Facades\Storage;
 
 class Helpers
 {
-  public static function error_processor($validator)
+  public static function response_format($code, $status, $message, $data)
+  {
+    $data = [
+      "code" => $code,
+      "status" => $status,
+      "message" => $message,
+      "data" => $data
+    ];
+    return $data;
+  }
+
+  public static function error_processor($validator, $code, $status, $message, $data)
   {
     $err_keeper = [];
     foreach ($validator->errors()->getMessages() as $index => $error) {
       array_push($err_keeper, ['code' => $index, 'message' => $error[0]]);
     }
 
-    return $err_keeper;
+    $data = [
+      "code" => $code,
+      "status" => $status,
+      "message" => $message,
+      "data" => $err_keeper
+    ];
+
+    return $data;
   }
   public static function checkRole($user)
   {
@@ -33,7 +51,7 @@ class Helpers
       $imageName = null;
     }
 
-    return $dir.$imageName;
+    return $dir . $imageName;
   }
 
   public static function update(string $dir, $old_image, string $format, $image = null)

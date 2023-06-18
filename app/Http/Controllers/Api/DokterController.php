@@ -8,6 +8,7 @@ use App\Models\History;
 use App\Models\Resep;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DokterController extends Controller
 {
@@ -17,9 +18,9 @@ class DokterController extends Controller
         $role = Helpers::checkRole($user);
         if ($role == 'dokter') {
             $user = User::with('detailDokter')->find($user['id']);
-            return response()->json(['status' => 'success', 'data' => $user], 200);
+            return response()->json(Helpers::response_format(200, true, "success", $user));
         }
-        return response()->json(['status' => 'error', 'message' => 'not authorized'], 200);
+        return response()->json(Helpers::response_format(200, false, "not authorized user", null));
     }
     
     public function pasien(Request $request){
@@ -40,10 +41,9 @@ class DokterController extends Controller
 
                 array_push($formatResep, $data);
             }
-
-            return response()->json(['status' => 'success', 'data' => $formatResep], 200);
+            return response()->json(Helpers::response_format(200, true, "success", $formatResep));
         }
-        return response()->json(['status' => 'error', 'message' => 'not authorized'], 200);
+        return response()->json(Helpers::response_format(200, false, "not authorized user", null));
     }
     
     public function history(Request $request){
@@ -51,6 +51,15 @@ class DokterController extends Controller
 
         $role = Helpers::checkRole($user);
         if ($role == 'dokter') {
+            $validator = Validator::make($request->all(), [
+                'id' => 'required',
+            ], [
+                'id.required' => 'Masukan ID pasien!',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json(Helpers::error_processor($validator, 403, false, 'error', null), 403);
+            }
             $user = User::with('detailDokter')->find($user['id']);
 
             $resep = Resep::with('user', 'history')->whereHas('user', function($q){
@@ -87,9 +96,8 @@ class DokterController extends Controller
                 'tgl_selesai' => $resep['tgl_selesai'],
             ];
 
-
-            return response()->json(['status' => 'success', 'rekam_medis' => $formatResep, 'history' => $formatHistory], 200);
+            return response()->json(Helpers::response_format(200, true, "success", ['rekam_medis' => $formatResep, 'history' => $formatHistory]));
         }
-        return response()->json(['status' => 'error', 'message' => 'not authorized'], 200);
+        return response()->json(Helpers::response_format(200, false, "not authorized user", null));
     }
 }

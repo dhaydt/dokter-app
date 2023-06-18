@@ -19,9 +19,9 @@ class UserController extends Controller
         $role = Helpers::checkRole($user);
         if ($role == 'user') {
             $user = User::with('detailUser')->find($user['id']);
-            return response()->json(['status' => 'success', 'data' => $user], 200);
+            return response()->json(Helpers::response_format(200, true, "success", $user));
         }
-        return response()->json(['status' => 'error', 'message' => 'not authorized'], 200);
+        return response()->json(Helpers::response_format(200, false, "not authorized user", null));
     }
 
     public function submit_lapor(Request $request){
@@ -40,7 +40,7 @@ class UserController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+                return response()->json(Helpers::error_processor($validator, 403, false, 'error', null), 403);
             }
 
             if(!$request->file('img')){
@@ -65,9 +65,9 @@ class UserController extends Controller
             $user->save();
 
             $user = User::with('detailUser')->find($user['id']);
-            return response()->json(['status' => 'success', 'message' => 'Status minum obat anda '.$status], 200);
+            return response()->json(Helpers::response_format(200, true, "success", ['message' => 'Status minum obat anda '.$status]));
         }
-        return response()->json(['status' => 'error', 'message' => 'not authorized'], 200);
+        return response()->json(Helpers::response_format(200, false, "not authorized user", null));
     }
     
     public function laporan(Request $request){
@@ -91,9 +91,9 @@ class UserController extends Controller
                 ];
                 array_push($formatData, $dat);
             }
-            return response()->json(['status' => 'success', 'data' => $formatData], 200);
+            return response()->json(Helpers::response_format(200, true, "success", $formatData));
         }
-        return response()->json(['status' => 'error', 'message' => 'not authorized'], 200);
+        return response()->json(Helpers::response_format(200, false, "not authorized user", null));
     }
     
     
@@ -128,8 +128,8 @@ class UserController extends Controller
                 ];
                 array_push($formatData, $dat);
             }
-            return response()->json(['status' => 'success', 'pasien' => $formatUser, 'rekam_medis' => $formatData], 200);
+            return response()->json(Helpers::response_format(200, true, "success", ['pasien' => $formatUser, 'rekam_medis' => $formatData]), 200);
         }
-        return response()->json(['status' => 'error', 'message' => 'not authorized'], 200);
+        return response()->json(Helpers::response_format(200, false, "not authorized user", null));
     }
 }

@@ -23,7 +23,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+            return response()->json(Helpers::error_processor($validator, 403, false, 'error', null), 403);
         }
         $check = User::where(['email' => $request->rfid, 'user_is' => 'user'])->first();
         if(!$check){
@@ -66,10 +66,9 @@ class AuthController extends Controller
             //     }
 
             // }
-            return response()->json(['message' => 'Halo ' . $user->name . ', Selamat datang..', 'access_token' => $token, 'token_type' => 'Bearer', 'user_is' => 'pasien']);
+            return response()->json(Helpers::response_format(200, true, "success", ["access_token" => $token, "user_is" => 'pasien']));
         }
-        return response()
-            ->json(['message' => 'Terjadi kesalahan, hubungi admin!']);
+        return response()->json(Helpers::response_format(403, false, "Terjadi kesalahan, Hubungi admin", null));
     }
     
     public function loginDokter(Request $request)
@@ -84,7 +83,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+            return response()->json(Helpers::error_processor($validator, 403, false, 'error', null), 403);
         }
         $check = User::where(['email' => $request->rfid, 'user_is' => 'dokter'])->first();
         if(!$check){
@@ -101,8 +100,8 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         if($user['user_is'] == 'dokter'){
-            return response()->json(['message' => 'Halo ' . $user->name . ', Selamat datang..', 'access_token' => $token, 'token_type' => 'Bearer', 'user_is' => 'dokter']);
+            return response()->json(Helpers::response_format(200, true, "success", ["access_token" => $token, "user_is" => 'dokter']));
         }
-        return response()->json(['message' => 'Terjadi kesalahan, hubungi admin!']);
+        return response()->json(Helpers::response_format(403, false, "Terjadi kesalahan, Hubungi admin", null));
     }
 }
