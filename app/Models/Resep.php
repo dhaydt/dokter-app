@@ -17,6 +17,9 @@ class Resep extends Model
         'tgl_selesai',
         'dosis',
         'perhari',
+        'note',
+        'status_pengobatan',
+        'status'
     ];
 
     public function obat()

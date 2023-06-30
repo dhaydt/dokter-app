@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\History;
+use App\Models\Obat;
 use App\Models\Resep;
 use App\Models\User;
 use Carbon\Carbon;
@@ -124,11 +125,41 @@ class UserController extends Controller
                     'tanggal_mulai' => $d['tgl_mulai'],
                     'tanggal_selesai' => $d['tgl_selesai'],
                     'dosis' => $d['dosis'].' X '.$d['perhari'].' hari',
-                    'history' => $d['history']
+                    'status_pengobatan' => $d['status_pengobatan'],
+                    'history' => $d['history'],
                 ];
                 array_push($formatData, $dat);
             }
             return response()->json(Helpers::response_format(200, true, "success", ['pasien' => $formatUser, 'rekam_medis' => $formatData]), 200);
+        }
+        return response()->json(Helpers::response_format(200, false, "not authorized user", null));
+    }
+    
+    public function obat(Request $request){
+        $user = $request->user();
+
+        $role = Helpers::checkRole($user);
+        if ($role == 'user') {
+            $user = User::with('detailUser')->find($user['id']);
+            $data = Resep::with('history')->where(['user_id' => $user['id'], 'status' => 'aktif'])->orderBy('created_at', 'desc')->first();
+            $obat = [];
+            foreach(json_decode($data['obat_id']) as $o){
+                $nama = Obat::find($o);
+                if($nama){
+                    array_push($obat, $nama['name']);
+                }
+            }
+            $formatUser = [
+                'name' => $user['name'],
+                'fase_Pengobatan' => $data['status_pengobatan'],
+                'obat' => implode(", ",$obat),
+                'dosis' => $data['dosis'].' x '.$data['perhari'],
+                'catatan_dokter' => $data['note'],
+                'tgl_mulai' => $data['tgl_mulai'],
+                'tgl_selesai' => $data['tgl_selesai'],
+                'alergi' => $user['detailUser']['alergi'] ?? 'Tidak ada',
+            ];
+            return response()->json(Helpers::response_format(200, true, "success", ['data' => $formatUser]), 200);
         }
         return response()->json(Helpers::response_format(200, false, "not authorized user", null));
     }

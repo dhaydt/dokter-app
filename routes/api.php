@@ -25,6 +25,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('profile_pasien', [UserController::class, 'profile']);
     Route::get('rekam_medis', [UserController::class, 'rekam_medis']);
+    Route::get('informasi_obat', [UserController::class, 'obat']);
     Route::get('laporan', [UserController::class, 'laporan']);
     Route::post('submit_lapor', [UserController::class, 'submit_lapor']);
 

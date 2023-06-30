@@ -12,6 +12,7 @@ use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -56,18 +57,18 @@ class ResepResource extends Resource
                     [
                         Select::make('obat_id')
                             ->label('Obat')
-                            ->placeholder('Select Obat!')
+                            ->placeholder('Pilih Obat!')
                             ->columnSpan(2)
                             ->options($newObat)
                             ->required()
                             ->multiple(),
                         Select::make('user_id')
-                            ->label('Patient')
-                            ->placeholder('Select Patient!')
+                            ->label('Pasien')
+                            ->placeholder('Pilih pasien!')
                             ->options($newUser)
                             ->required(),
                         Select::make('dokter_id')
-                            ->label('Doctor')
+                            ->label('Dokter')
                             ->placeholder('Select Doctor!')
                             ->options($newDokter)
                             ->required(),
@@ -87,6 +88,13 @@ class ResepResource extends Resource
                             ->label('Jarak obat diminum')
                             ->hint('satuan: hari')
                             ->placeholder('Ex: 1'),
+                        Select::make('status_pengobatan')
+                            ->placeholder('Pilih status pengobatan')
+                            ->options(['fase intensif' => 'fase intensif', 'selesai' => 'selesai'])
+                            ->required(),
+                        Textarea::make('note')
+                            ->label('Catatan dokter')
+                            ->required()
                     ]
                 )->columns(2)
             );
@@ -123,6 +131,9 @@ class ResepResource extends Resource
                     ->date(),
                 Tables\Columns\TextColumn::make('dosis'),
                 Tables\Columns\TextColumn::make('perhari'),
+                Tables\Columns\TextColumn::make('note')->label('Catatan Dokter'),
+                Tables\Columns\TextColumn::make('status_pengobatan')->label('Catatan Dokter'),
+                Tables\Columns\TextColumn::make('status'),
             ])
             ->filters([
                 //
