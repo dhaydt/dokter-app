@@ -38,23 +38,6 @@ class EditUser extends EditRecord
         return $data;
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        $detail = DetailUser::find($data['detail_id']);
-        $detail->nik = $data['nik'];
-        $detail->ttl = $data['ttl'];
-        $detail->umur = $data['umur'];
-        $detail->kelamin = $data['kelamin'];
-        $detail->phone = $data['phone'];
-        $detail->berat = $data['berat'];
-        $detail->tinggi = $data['tinggi'];
-        $detail->alergi = $data['alergi'];
-        $detail->alamat = $data['alamat'];
-        $detail->save();
-
-        return $data;
-    }
-
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

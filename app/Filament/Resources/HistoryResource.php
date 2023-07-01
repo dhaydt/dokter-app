@@ -23,6 +23,8 @@ class HistoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-view-list';
     protected static ?string $navigationGroup = 'Pasien';
+    protected static ?string $label = 'Riwayat';
+    protected static ?string $navigationLabel = 'Riwayat';
 
     public static function form(Form $form): Form
     {

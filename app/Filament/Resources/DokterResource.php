@@ -25,8 +25,8 @@ class DokterResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-heart';
     protected static ?string $navigationGroup = 'Master';
-    protected static ?string $label = 'Doctor';
-    protected static ?string $navigationLabel = 'Doctors';
+    protected static ?string $label = 'Dokter';
+    protected static ?string $navigationLabel = 'Dokter';
     protected static ?string $slug = 'Dokter';
 
     public static function form(Form $form): Form
