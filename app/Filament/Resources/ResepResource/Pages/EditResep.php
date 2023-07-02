@@ -31,40 +31,42 @@ class EditResep extends EditRecord
         return $data;
     }
 
-    // protected function mutateFormDataBeforeSave(array $data): array
-    // {
-    //     $data['obat_id'] = json_encode($data['obat_id']);
-    //     $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai']);
-    //     $to = Carbon::createFromFormat('Y-m-d', $data['tgl_selesai'])->addDay();
-    //     $difference = $from->diff($to)->days;
-    //     $total = $difference / $data['perhari'] / $data['dosis'];
-    //     // var_dump($data, $total);
-    //     // if($data['perhari'] == 2){
-    //         // }
-    //     $dateList = [$from];
-    //     $fromNew = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai'])->subDays();
-    //     $resep_id = Resep::orderBy('created_at', 'desc')->first();
-    //     if(!$resep_id){
-    //         $resep_id['id'] = 0;
-    //     }
-    //     $resep_id = $resep_id['id'] + 1;
-    //     // dd($total);
-    //     for($i = 1; $i < $total; $i++){
-    //         $added = $fromNew->addDays($data['perhari']);
-    //         array_push($dateList, $added);
-    //         $from = $added;
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $histories = History::where('resep_id', $data['id'])->get();
+        foreach($histories as $h){
+            $h->delete();
+        }
+        $data['obat_id'] = json_encode($data['obat_id']);
+        $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai']);
+        $to = Carbon::createFromFormat('Y-m-d', $data['tgl_selesai']);
+        // if($data['perhari'] == 2){
+        //     $to = Carbon::createFromFormat('Y-m-d', $data['tgl_selesai'])->addDay();
+        // }
+        $difference = $from->diff($to)->days;
+        $total = $difference / $data['perhari'];
+        // dd($difference, round($total));
+        // var_dump($data, $total);
+        $dateList = [$from];
+        $fromNew = $from->subDays();
 
-    //         $history = new History();
-    //         $history->resep_id = $resep_id;
-    //         $history->hari_ke = $i;
-    //         $history->tanggal = $dateList[$i - 1];
-    //         $history->status = 'pending';
-    //         $history->save();
-    //     }
+        $resep_id = $data['id'];
+        for($i = 1; $i <= round($total); $i++){
+            $added = $fromNew->addDays($data['perhari']);
+            array_push($dateList, $added);
+            $fromNew = $added;
+            
+            $history = new History();
+            $history->resep_id = $resep_id;
+            $history->hari_ke = $i;
+            $history->tanggal = $dateList[$i - 1];
+            $history->status = 'pending';
+            $history->save();
+        }
 
 
-    //     return $data;
-    // }
+        return $data;
+    }
     
     protected function getSavedNotificationTitle(): ?string
     {

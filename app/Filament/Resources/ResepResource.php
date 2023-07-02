@@ -13,6 +13,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -55,10 +56,11 @@ class ResepResource extends Resource
             ->schema(
                 Card::make()->schema(
                     [
+                        TextInput::make('id')->label('ID Resep')->disabled()->hiddenOn('create'),
                         Select::make('obat_id')
                             ->label('Obat')
-                            ->placeholder('Pilih Obat!')
                             ->columnSpan(2)
+                            ->placeholder('Pilih Obat!')
                             ->options($newObat)
                             ->required()
                             ->multiple(),
@@ -82,15 +84,17 @@ class ResepResource extends Resource
                             ->label('Kali minum obat')
                             ->hint('Berapa kali obat diminum')
                             ->type('number')
-                            ->placeholder('Ex: 1')
-                            ->required(),
+                            ->placeholder(1)
+                            ->default(1)
+                            ->minValue(1)
+                            ->maxValue(1),
                         Forms\Components\TextInput::make('perhari')
                             ->label('Jarak obat diminum')
                             ->hint('satuan: hari')
                             ->placeholder('Ex: 1'),
                         Select::make('status_pengobatan')
                             ->placeholder('Pilih status pengobatan')
-                            ->options(['fase intensif' => 'fase intensif', 'selesai' => 'selesai'])
+                            ->options(['fase intensif' => 'fase intensif', 'lanjutan' => 'Lanjutan'])
                             ->required(),
                         Textarea::make('note')
                             ->label('Catatan dokter')
