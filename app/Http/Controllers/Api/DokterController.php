@@ -34,10 +34,12 @@ class DokterController extends Controller
             $formatResep = [];
 
             foreach($resep as $r){
-                $data = [
-                    'id' => $r['id'],
-                    'nama_pasien' => $r['user']['name'],
-                ];
+                if($r['user']){
+                    $data = [
+                        'id' => $r['id'],
+                        'nama_pasien' => $r['user']['name'],
+                    ];
+                }
 
                 array_push($formatResep, $data);
             }

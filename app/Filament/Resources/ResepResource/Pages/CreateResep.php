@@ -27,9 +27,10 @@ class CreateResep extends CreateRecord
     {
         $data['obat_id'] = json_encode($data['obat_id']);
         $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai']);
-        $to = Carbon::createFromFormat('Y-m-d', $data['tgl_selesai']);
+        $to = Carbon::createFromFormat('Y-m-d', $data['tgl_selesai'])->addDay();
         $difference = $from->diff($to)->days;
         $total = $difference / $data['perhari'] / $data['dosis'];
+        // var_dump($data, $total);
         // if($data['perhari'] == 2){
             // }
         $dateList = [$from];
@@ -39,6 +40,7 @@ class CreateResep extends CreateRecord
             $resep_id['id'] = 0;
         }
         $resep_id = $resep_id['id'] + 1;
+        // dd($total);
         for($i = 1; $i < $total; $i++){
             $added = $fromNew->addDays($data['perhari']);
             array_push($dateList, $added);
@@ -50,7 +52,6 @@ class CreateResep extends CreateRecord
             $history->tanggal = $dateList[$i - 1];
             $history->status = 'pending';
             $history->save();
-
         }
 
 
