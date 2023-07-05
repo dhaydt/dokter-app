@@ -9,9 +9,11 @@ use App\Models\DetailUser;
 use App\Models\User;
 use Faker\Core\Number;
 use Filament\Forms;
+use Filament\Pages\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Pages\Actions\Action as ActionsAction;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -137,6 +139,11 @@ class UserResource extends Resource
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),
             ]);
+    }
+
+    public function reset(): void
+    {
+        dd('work');
     }
 
     public static function getEloquentQuery(): Builder

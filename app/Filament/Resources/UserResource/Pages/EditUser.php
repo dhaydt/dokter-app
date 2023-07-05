@@ -7,22 +7,42 @@ use App\Models\DetailUser;
 use App\Models\User;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions;
+use Filament\Pages\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class EditUser extends EditRecord
 {
     protected static string $resource = UserResource::class;
 
+    public $id_data;
+
     protected function getActions(): array
     {
         return [
             Actions\DeleteAction::make(),
+            Action::make('Reset')->tooltip('Reset Password')->action('openSettingsModal'),
         ];
+    }
+
+    public function openSettingsModal(): void
+    {
+        $user = User::find($this->id_data);
+        if($user){
+            $user->password = Hash::make('123456');
+            $user->save();
+        }
+
+        Notification::make() 
+            ->title('Password berhasil direset!')
+            ->success()
+            ->send(); 
     }
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
+        $this->id_data = $data['id'];
         $user = User::find($data['id']);
         $data['detail_id'] = $user['detail_id'];
         $data['nik'] = $user->detailUser->nik;
