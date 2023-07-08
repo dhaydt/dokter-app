@@ -24,17 +24,24 @@ Route::post('/login_dokter', [AuthController::class, 'loginDokter']);
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('profile_pasien', [UserController::class, 'profile']);
+
     Route::get('rekam_medis', [UserController::class, 'rekam_medis']);
+
     Route::get('informasi_obat', [UserController::class, 'obat']);
+
     Route::get('laporan', [UserController::class, 'laporan']);
+
     Route::post('submit_lapor', [UserController::class, 'submit_lapor']);
 
     Route::get('dokter_list', [ApiController::class, 'dokter_list']);
+
+    Route::post('change_password_pasien', [UserController::class, 'changePassword']);
 
     Route::prefix('dokter')->group(function(){
         Route::get('profile_dokter', [DokterController::class, 'profile']);
         Route::get('list_pasien', [DokterController::class, 'pasien']);
         Route::post('pasien_history', [DokterController::class, 'history']);
+        Route::post('change_password_dokter', [DokterController::class, 'changePassword']);
     });
     
 });

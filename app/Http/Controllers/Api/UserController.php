@@ -10,6 +10,7 @@ use App\Models\Resep;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -21,6 +22,34 @@ class UserController extends Controller
         if ($role == 'user') {
             $user = User::with('detailUser')->find($user['id']);
             return response()->json(Helpers::response_format(200, true, "success", $user));
+        }
+        return response()->json(Helpers::response_format(200, false, "not authorized user", null));
+    }
+
+    public function changePassword(Request $request)
+    {
+        $user = $request->user();
+
+        $role = Helpers::checkRole($user);
+        if ($role == 'user') {
+            $validator = Validator::make($request->all(), [
+                'password' => 'required|min:6',
+                'c_password' => 'required|same:password'
+            ], [
+                'password.required' => 'Masukan password baru!',
+                'password.min' => 'Minimal 6 karakter!',
+                'c_password.required' => 'Masukan konfirmasi password!',
+                'c_password.same' => 'Password konfirmasi tidak sama!',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(Helpers::error_processor($validator, 403, false, 'error', null), 403);
+            }
+            $user = User::find($user['id']);
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return response()->json(Helpers::response_format(200, true, "password berhasil diganti", $user));
         }
         return response()->json(Helpers::response_format(200, false, "not authorized user", null));
     }
