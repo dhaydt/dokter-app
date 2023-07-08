@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -38,3 +39,9 @@ Route::get('/seed', function () {
 Route::get('/', function () {
     return redirect()->route('filament.auth.login');
 });
+
+Route::post('change-password', [Controller::class, 'changePassword'])->name('password');
+
+Route::get('login', function(){
+    return redirect()->route('filament.auth.login');
+})->name('login');
