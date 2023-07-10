@@ -170,22 +170,25 @@ class UserController extends Controller
         $role = Helpers::checkRole($user);
         if ($role == 'user') {
             $user = User::with('detailUser')->find($user['id']);
-            $data = Resep::with('history')->where(['user_id' => $user['id'], 'status' => 'aktif'])->orderBy('created_at', 'desc')->first();
+            $data = Resep::with('history', 'resep_obat')->where(['user_id' => $user['id'], 'status' => 'aktif'])->orderBy('created_at', 'desc')->first();
             $obat = [];
-            foreach(json_decode($data['obat_id']) as $o){
-                $nama = Obat::find($o);
-                if($nama){
-                    array_push($obat, $nama['name']);
+            // return $data;
+            if($data){
+                foreach($data['resep_obat'] as $o){
+                    $nama = $o['obat'];
+                    if($nama){
+                        array_push($obat, $nama['name'] . ' ('. $o->tablet .' tablet)');
+                    }
                 }
             }
             $formatUser = [
                 'name' => $user['name'],
-                'fase_Pengobatan' => $data['status_pengobatan'],
+                'fase_Pengobatan' => $data['status_pengobatan'] ?? '-',
                 'obat' => implode(", ",$obat),
-                'dosis' => $data['dosis'].' x '.$data['perhari'],
-                'catatan_dokter' => $data['note'],
-                'tgl_mulai' => $data['tgl_mulai'],
-                'tgl_selesai' => $data['tgl_selesai'],
+                'dosis' => ($data['dosis'] ?? '-').' x '.($data['perhari'] ?? '-'),
+                'catatan_dokter' => $data['note'] ?? '-',
+                'tgl_mulai' => $data['tgl_mulai'] ?? '-',
+                'tgl_selesai' => $data['tgl_selesai'] ?? '-',
                 'alergi' => $user['detailUser']['alergi'] ?? 'Tidak ada',
             ];
             return response()->json(Helpers::response_format(200, true, "success", ['data' => $formatUser]), 200);

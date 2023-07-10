@@ -25,7 +25,7 @@ class CreateResep extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['obat_id'] = json_encode($data['obat_id']);
+        // $data['obat_id'] = json_encode($data['obat_id']);
         $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai']);
         $to = Carbon::createFromFormat('Y-m-d', $data['tgl_selesai'])->addDay();
         $difference = $from->diff($to)->days;

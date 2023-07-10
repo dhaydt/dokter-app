@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Resep extends Model
 {
@@ -21,6 +22,16 @@ class Resep extends Model
         'status_pengobatan',
         'status'
     ];
+
+    /**
+     * Get all of the comments for the Resep
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function resep_obat(): HasMany
+    {
+        return $this->hasMany(ResepObat::class, 'resep_id', 'id');
+    }
 
     public function obat()
     {

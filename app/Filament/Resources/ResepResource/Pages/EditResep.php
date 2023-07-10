@@ -37,7 +37,7 @@ class EditResep extends EditRecord
         foreach($histories as $h){
             $h->delete();
         }
-        $data['obat_id'] = json_encode($data['obat_id']);
+        // $data['obat_id'] = json_encode($data['obat_id']);
         $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai']);
         $to = Carbon::createFromFormat('Y-m-d', $data['tgl_selesai']);
         // if($data['perhari'] == 2){

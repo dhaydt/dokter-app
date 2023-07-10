@@ -98,34 +98,38 @@ class DokterController extends Controller
             })->find($request->id);
 
             $formatHistory = [];
-
-            foreach($resep['history'] as $h){
-                $data = [
-                    'id' => $h['id'],
-                    'hari_ke' => $h['hari_ke'],
-                    'waktu_minum' => $h['waktu_minum'],
-                    'img' => $h['img'] ? getenv('APP_URL').'/storage/'.$h['img'] : null,
-                    'status' => $h['status'],
-                    'expire' => $h['tanggal'],
+            
+            if($resep){
+                foreach($resep['history'] as $h){
+                    $data = [
+                        'id' => $h['id'],
+                        'hari_ke' => $h['hari_ke'],
+                        'waktu_minum' => $h['waktu_minum'],
+                        'img' => $h['img'] ? getenv('APP_URL').'/storage/'.$h['img'] : null,
+                        'status' => $h['status'],
+                        'expire' => $h['tanggal'],
+                    ];
+    
+                    array_push($formatHistory, $data);
+                }
+                $formatResep = [
+                    'id' => $resep['id'] ?? '-',
+                    'nama_pasien' => $resep['user']['name'] ?? '-',
+                    'nik' => $resep['user']['detailUser']['nik'] ?? '-',
+                    'lahir' => $resep['user']['detailUser']['ttl'] ?? '-',
+                    'umur' => $resep['user']['detailUser']['umur'] ?? '-',
+                    'kelamin' => $resep['user']['detailUser']['kelamin'] ?? '-',
+                    'berat' => $resep['user']['detailUser']['berat'] ?? '-',
+                    'tinggi' => $resep['user']['detailUser']['tinggi'] ?? '-',
+                    'phone' => $resep['user']['detailUser']['phone'] ?? '-',
+                    'alergi' => $resep['user']['detailUser']['alergi'] ?? '-',
+                    'tgl_mulai' => $resep['tgl_mulai'] ?? '-',
+                    'tgl_selesai' => $resep['tgl_selesai'] ?? '-',
                 ];
-
-                array_push($formatHistory, $data);
+            }else{
+                $formatResep = [];
             }
 
-            $formatResep = [
-                'id' => $resep['id'],
-                'nama_pasien' => $resep['user']['name'],
-                'nik' => $resep['user']['detailUser']['nik'],
-                'lahir' => $resep['user']['detailUser']['ttl'],
-                'umur' => $resep['user']['detailUser']['umur'],
-                'kelamin' => $resep['user']['detailUser']['kelamin'],
-                'berat' => $resep['user']['detailUser']['berat'],
-                'tinggi' => $resep['user']['detailUser']['tinggi'],
-                'phone' => $resep['user']['detailUser']['phone'],
-                'alergi' => $resep['user']['detailUser']['alergi'],
-                'tgl_mulai' => $resep['tgl_mulai'],
-                'tgl_selesai' => $resep['tgl_selesai'],
-            ];
 
             return response()->json(Helpers::response_format(200, true, "success", ['rekam_medis' => $formatResep, 'history' => $formatHistory]));
         }

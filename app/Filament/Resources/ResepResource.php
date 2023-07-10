@@ -9,8 +9,10 @@ use App\Filament\Resources\ResepResource\RelationManagers\HistoryRelationManager
 use App\Models\Obat;
 use App\Models\Resep;
 use App\Models\User;
+use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -57,13 +59,6 @@ class ResepResource extends Resource
                 Card::make()->schema(
                     [
                         TextInput::make('id')->label('ID Resep')->disabled()->hiddenOn('create'),
-                        Select::make('obat_id')
-                            ->label('Obat')
-                            ->columnSpan(2)
-                            ->placeholder('Pilih Obat!')
-                            ->options($newObat)
-                            ->required()
-                            ->multiple(),
                         Select::make('user_id')
                             ->label('Pasien')
                             ->placeholder('Pilih pasien!')
@@ -80,12 +75,32 @@ class ResepResource extends Resource
                         Forms\Components\DatePicker::make('tgl_selesai')
                             ->required()
                             ->label('Tanggal selesai berobat'),
+                        Card::make()
+                            ->schema([
+                                Repeater::make('resep_obat')
+                                    ->relationship()
+                                    ->schema([
+                                        Select::make('obat_id')
+                                            ->label('Nama Obat')
+                                            ->placeholder('Pilih Obat!')
+                                            ->options($newObat)
+                                            ->required()
+                                            ->reactive(),
+                                        TextInput::make('tablet')
+                                            ->type('number')
+                                            ->hint('Jumlah tablet dalam sekali minum')
+                                            ->default(1)
+                                            ->required()
+                                    ])->columns(2)->columnSpan('full'),
+                            ])->columns(2),
+
                         Forms\Components\TextInput::make('dosis')
                             ->label('Kali minum obat')
                             ->hint('Berapa kali obat diminum')
                             ->type('number')
                             ->placeholder(1)
                             ->default(1)
+                            ->required()
                             ->minValue(1)
                             ->maxValue(1),
                         Forms\Components\TextInput::make('perhari')
@@ -110,22 +125,21 @@ class ResepResource extends Resource
             ->columns([
                 TextColumn::make('No')->getStateUsing(
                     static function (stdClass $rowLoop, HasTable $livewire): string {
-                        return (string) (
-                            $rowLoop->iteration +
-                            ($livewire->tableRecordsPerPage * (
-                                $livewire->page - 1
+                        return (string) ($rowLoop->iteration +
+                            ($livewire->tableRecordsPerPage * ($livewire->page - 1
                             ))
                         );
                     }
                 ),
-                Tables\Columns\TextColumn::make('obat_id')->getStateUsing(function($record){
-                    $obat_id = json_decode($record['obat_id']);
-                    $obat = [];
-                    foreach($obat_id as $o){
-                        array_push($obat,Obat::find($o)['name']);
+                Tables\Columns\TextColumn::make('obat_id')->label("Obat")->getStateUsing(function ($record) {
+                    // $obat = [];
+                    $string = '';
+                    foreach ($record->resep_obat as $index => $o) {
+                        // array_push($obat, $o);
+                        $string = $string . $o->obat->name . ' ('. $o->tablet .')' . ($index + 1 == $record->resep_obat->count() ? '': ', ');
                     }
 
-                    return $obat;
+                    return $string;
                 })->searchable(),
                 Tables\Columns\TextColumn::make('user.name')->searchable(),
                 Tables\Columns\TextColumn::make('dokter.name')->searchable(),
