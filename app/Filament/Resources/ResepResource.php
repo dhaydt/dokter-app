@@ -78,6 +78,7 @@ class ResepResource extends Resource
                         Card::make()
                             ->schema([
                                 Repeater::make('resep_obat')
+                                    ->label('Jenis Obat')
                                     ->relationship()
                                     ->schema([
                                         Select::make('obat_id')
