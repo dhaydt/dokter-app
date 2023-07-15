@@ -27,8 +27,10 @@ class DetailUserRelationManager extends RelationManager
                 Forms\Components\TextInput::make('nik')
                     ->label('NIK')
                     ->unique(ignorable: fn ($record) => $record)
-                    ->length(16)
-                    ->hint('16 characters')
+                    ->minLength(16)
+                    ->maxLength(16)
+                    ->hint(fn ($state, $component) => 'sisa: ' . $component->getMaxLength() - strlen($state) . ' angka')
+                    ->reactive()
                     ->validationAttribute('NIK')
                     ->type('number')
                     ->required(),
