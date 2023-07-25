@@ -111,6 +111,7 @@ class UserController extends Controller
 
             $formatData = [];
             foreach($data as $d){
+                $active = Carbon::parse($d['tanggal']) > Carbon::now()->format('Y-m-d') ? true : false;
                 $dat = [
                     'id' => $d['id'],
                     'hari_ke' => $d['hari_ke'],
@@ -118,6 +119,7 @@ class UserController extends Controller
                     'img' => $d['img'] ? getenv('APP_URL').'/storage/'.$d['img'] : null,
                     'status' => $d['status'],
                     'expire' => $d['tanggal'],
+                    'is_active' => $active,
                 ];
                 array_push($formatData, $dat);
             }
