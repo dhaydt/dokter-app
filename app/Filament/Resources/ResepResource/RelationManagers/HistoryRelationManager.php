@@ -36,33 +36,37 @@ class HistoryRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('No')->getStateUsing(
                     static function (stdClass $rowLoop, HasTable $livewire): string {
-                        return (string) (
-                            $rowLoop->iteration +
-                            ($livewire->tableRecordsPerPage * (
-                                $livewire->page - 1
+                        return (string) ($rowLoop->iteration +
+                            ($livewire->tableRecordsPerPage * ($livewire->page - 1
                             ))
                         );
                     }
                 ),
-                Tables\Columns\TextColumn::make('resep.obat_id')
-                    ->label('Obat')
-                    ->getStateUsing(function($record){
-                        $obat_id = json_decode($record['resep']['obat_id']);
+                Tables\Columns\TextColumn::make('resep.obat_id')->getStateUsing(function ($record) {
+                    if ($record['resep']) {
+                        // dd($record['resep']['resep_obat']);
+                        $obat_id = $record['resep']['resep_obat'];
                         $obat = [];
-                        foreach($obat_id as $o){
-                            array_push($obat,Obat::find($o)['name']);
+                        foreach ($obat_id as $o) {
+                            if ($o['obat']) {
+                                array_push($obat, $o['obat']['name']);
+                            } else {
+                                array_push($obat, 'data obat dihapus');
+                            }
                         }
 
                         return $obat;
-                    })->searchable(),
-                    TextColumn::make('hari_ke')
-                        ->label('Hari ke-'),
-                    TextColumn::make('waktu_minum')
-                        ->label('Waktu minum'),
-                    TextColumn::make('img')->label('Foto'),
-                    TextColumn::make('status'),
-                    TextColumn::make('tanggal')->label('Batas waktu minum')->date('d M Y'),
-                ])
+                    }
+                    return 'Invalid resep';
+                })->searchable(),
+                TextColumn::make('hari_ke')
+                    ->label('Hari ke-'),
+                TextColumn::make('waktu_minum')
+                    ->label('Waktu minum'),
+                TextColumn::make('img')->label('Foto'),
+                TextColumn::make('status'),
+                TextColumn::make('tanggal')->label('Batas waktu minum')->date('d M Y'),
+            ])
 
             ->filters([
                 //
@@ -77,5 +81,5 @@ class HistoryRelationManager extends RelationManager
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }    
+    }
 }
