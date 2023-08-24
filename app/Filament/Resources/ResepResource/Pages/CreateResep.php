@@ -23,40 +23,40 @@ class CreateResep extends CreateRecord
         return 'Resep created successfully!';
     }
 
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        // $data['obat_id'] = json_encode($data['obat_id']);
-        $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai']);
-        $to = Carbon::createFromFormat('Y-m-d', $data['tgl_selesai'])->addDay();
-        $difference = $from->diff($to)->days;
-        $total = $difference / $data['perhari'] / $data['dosis'];
-        // var_dump($data, $total);
-        // if($data['perhari'] == 2){
-            // }
-        $dateList = [$from];
-        $fromNew = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai'])->subDays();
-        $resep_id = Resep::orderBy('created_at', 'desc')->first();
-        if(!$resep_id){
-            $resep_id['id'] = 0;
-        }
-        $resep_id = $resep_id['id'] + 1;
-        // dd($total);
-        for($i = 1; $i < $total; $i++){
-            $added = $fromNew->addDays($data['perhari']);
-            array_push($dateList, $added);
-            $from = $added;
+    // protected function mutateFormDataBeforeCreate(array $data): array
+    // {
+    //     // $data['obat_id'] = json_encode($data['obat_id']);
+    //     $from = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai']);
+    //     $to = Carbon::createFromFormat('Y-m-d', $data['tgl_selesai'])->addDay();
+    //     $difference = $from->diff($to)->days;
+    //     $total = $difference / $data['perhari'] / $data['dosis'];
+    //     // var_dump($data, $total);
+    //     // if($data['perhari'] == 2){
+    //         // }
+    //     $dateList = [$from];
+    //     $fromNew = Carbon::createFromFormat('Y-m-d', $data['tgl_mulai'])->subDays();
+    //     $resep_id = Resep::orderBy('created_at', 'desc')->first();
+    //     if(!$resep_id){
+    //         $resep_id['id'] = 0;
+    //     }
+    //     $resep_id = $resep_id['id'] + 1;
+    //     // dd($total);
+    //     for($i = 1; $i < $total; $i++){
+    //         $added = $fromNew->addDays($data['perhari']);
+    //         array_push($dateList, $added);
+    //         $from = $added;
 
-            $history = new History();
-            $history->resep_id = $resep_id;
-            $history->hari_ke = $i;
-            $history->tanggal = $dateList[$i - 1];
-            $history->status = 'pending';
-            $history->save();
-        }
+    //         $history = new History();
+    //         $history->resep_id = $resep_id;
+    //         $history->hari_ke = $i;
+    //         $history->tanggal = $dateList[$i - 1];
+    //         $history->status = 'pending';
+    //         $history->save();
+    //     }
 
 
-        return $data;
-    }
+    //     return $data;
+    // }
 
     protected function afterCreate(): void
     {
