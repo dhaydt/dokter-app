@@ -66,6 +66,7 @@ class HistoryResource extends Resource
                     return 'Invalid resep';
                 }),
                 Tables\Columns\TextColumn::make('resep.user.name')->label('Patient')->searchable(),
+                Tables\Columns\TextColumn::make('resep.status_pengobatan')->label('Fase Pengobatan')->searchable(),
                 Tables\Columns\TextColumn::make('hari_ke')->label('Hari Ke'),
                 Tables\Columns\TextColumn::make('waktu_minum')->label('Waktu diminum')->date('d M Y, H:i'),
                 Tables\Columns\TextColumn::make('img')->label('Foto'),

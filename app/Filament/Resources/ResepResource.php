@@ -153,7 +153,7 @@ class ResepResource extends Resource
                 Tables\Columns\TextColumn::make('dosis'),
                 Tables\Columns\TextColumn::make('perhari'),
                 Tables\Columns\TextColumn::make('note')->label('Catatan Dokter'),
-                Tables\Columns\TextColumn::make('status_pengobatan')->label('Catatan Dokter'),
+                Tables\Columns\TextColumn::make('status_pengobatan')->label('Status Pengobatan'),
                 Tables\Columns\TextColumn::make('status'),
             ])
             ->filters([

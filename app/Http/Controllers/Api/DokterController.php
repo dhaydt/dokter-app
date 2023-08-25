@@ -125,6 +125,7 @@ class DokterController extends Controller
                     'alergi' => $resep['user']['detailUser']['alergi'] ?? '-',
                     'tgl_mulai' => $resep['tgl_mulai'] ?? '-',
                     'tgl_selesai' => $resep['tgl_selesai'] ?? '-',
+                    'status_pengobatan' => $resep['status_pengobatan'] ?? '-',
                 ];
             }else{
                 $formatResep = [];
