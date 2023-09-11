@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login_auto', [AuthController::class, 'newLogin']);
+Route::post('/check_rfid', [AuthController::class, 'check']);
 Route::post('/login_dokter', [AuthController::class, 'loginDokter']);
 
 Route::middleware(['auth:sanctum'])->group(function () {

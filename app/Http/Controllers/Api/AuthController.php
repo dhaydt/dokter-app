@@ -11,6 +11,70 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function check(Request $request){
+        $validator = Validator::make($request->all(), [
+            'rfid' => 'required'
+        ], [
+            'rfid.required'    => 'Mohon masukan ID RFID'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(Helpers::error_processor($validator, 403, false, 'error', null), 403);
+        }
+
+        $check = User::where('email', $request->rfid)->first();
+
+        if(!$check){
+            return response()
+                ->json(['status' => 'error', 'message' => 'RFID tidak ditemukan!'], 401);
+        }else{
+            $user_is = $check['user_is'] == 'user' ? 'pasien' : 'dokter';
+            $format = [
+                "name" => $check['name'],
+                "rfid" => $check['email'],
+                "user_is" => $user_is,
+            ];
+
+            return response()->json(Helpers::response_format(200, true, "success", ["user_is" => $user_is, "user" => $format]));
+        }
+    }
+
+    public function newLogin(Request $request){
+        $validator = Validator::make($request->all(), [
+            'rfid' => 'required',
+            'accesskey' => 'required|min:6',
+        ], [
+            'rfid.required' => 'Mohon masukan RFID'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(Helpers::error_processor($validator, 403, false, 'error', null), 403);
+        }
+
+        $user = User::where('email', $request['rfid'])->first();
+
+        if(!$user){
+            return response()
+                ->json(['status' => 'error', 'message' => 'User tidak ditemukan!'], 401);
+        }
+
+        if (!Auth::attempt(['email' => $request->rfid, 'password' => $request->accesskey])) {
+            return response()
+                ->json(['status' => 'error', 'message' => 'Kode Akses Salah!'], 401);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        if($user['user_is'] == 'user'){
+
+            return response()->json(Helpers::response_format(200, true, "success", ["access_token" => $token, "user_is" => 'pasien']));
+
+        }elseif($user['user_is'] == 'dokter'){
+
+            return response()->json(Helpers::response_format(200, true, "success", ["access_token" => $token, "user_is" => 'dokter']));
+        }
+    }
+
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -40,32 +104,6 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         if($user['user_is'] == 'user'){
-            // $type = 'customer';
-            // if($user['birthday'] == null || $user['gender'] == null || $user['occupation'] == null || $user['province_id'] == null || $user['city_id'] == null || $user['address'] == null){
-            //     // dd($data);
-            //     if($user['fcm'] && $user['is_notify'] == 1){
-            //         $data = [
-            //             'title' => 'Information your profile!',
-            //             'description' => 'Please complete your profile to get a promo from us!'
-            //         ];
-            //         $notif = new Notifications();
-            //         $notif->title = $data['title'];
-            //         $notif->description = $data['description'];
-            //         $notif->save();
-
-            //         $id = $notif->id ?? $notif['id'];
-
-            //         $notifSave = new NotifReceiver();
-            //         $notifSave->notification_id = $id;
-            //         $notifSave->user_id = $user['id'];
-            //         $notifSave->is_read = 0;
-            //         $notifSave->save();
-
-            //         Helpers::send_push_notif_to_device($user['fcm'], $data,null);
-
-            //     }
-
-            // }
             return response()->json(Helpers::response_format(200, true, "success", ["access_token" => $token, "user_is" => 'pasien']));
         }
         return response()->json(Helpers::response_format(403, false, "Terjadi kesalahan, Hubungi admin", null));
