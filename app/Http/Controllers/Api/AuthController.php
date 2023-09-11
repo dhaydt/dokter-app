@@ -7,10 +7,44 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function register(Request $request){
+        $validator = Validator::make($request->all(), [
+            'rfid' => 'required',
+            'name' => 'required',
+            'accesskey' => 'required|min:6',
+        ], [
+            'rfid.required'    => 'Mohon masukan ID RFID',
+            'name.required'    => 'Mohon masukan nama pasien / dokter',
+            'accesskey.required'    => 'Mohon masukan kode akses',
+            'accesskey.min'    => 'Minimal 6 karakter'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(Helpers::error_processor($validator, 403, false, 'error', null), 403);
+        }
+
+        $check = User::where('email', $request->rfid)->first();
+
+        if($check){
+            return response()
+                ->json(['status' => 'error', 'message' => 'RFID sudah terdaftar'], 401);
+        }else{
+            // return $request;
+            $user = new User();
+            $user->name = $request->name;
+            $user->password = Hash::make($request->accesskey);
+            $user->email = $request->rfid;
+            $user->user_is = '-';
+            $user->save();
+
+            return response()->json(Helpers::response_format(200, true, "success", ["user_is" => '-', "user" => $user]));
+        }
+    }
     public function check(Request $request){
         $validator = Validator::make($request->all(), [
             'rfid' => 'required'
@@ -26,7 +60,7 @@ class AuthController extends Controller
 
         if(!$check){
             return response()
-                ->json(['status' => 'error', 'message' => 'RFID tidak ditemukan!'], 401);
+                ->json(['status' => 'error', 'message' => 'RFID tidak ditemukan!', 'rfid' => $request->rfid], 401);
         }else{
             $user_is = $check['user_is'] == 'user' ? 'pasien' : 'dokter';
             $format = [

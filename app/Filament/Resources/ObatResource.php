@@ -22,6 +22,7 @@ class ObatResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-support';
     protected static ?string $navigationGroup = 'Master';
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {

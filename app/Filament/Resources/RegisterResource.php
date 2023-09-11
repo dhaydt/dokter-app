@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DokterResource\Pages;
-use App\Filament\Resources\DokterResource\RelationManagers;
-use App\Filament\Resources\DokterResource\RelationManagers\DetailDokterRelationManager;
-use App\Models\Dokter;
+use App\Filament\Resources\RegisterResource\Pages;
+use App\Filament\Resources\RegisterResource\RelationManagers;
+use App\Models\Register;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -16,18 +16,19 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use stdClass;
 
-class DokterResource extends Resource
+class RegisterResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-heart';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?string $navigationGroup = 'Master';
-    protected static ?string $label = 'Dokter';
-    protected static ?string $navigationLabel = 'Dokter';
-    protected static ?string $slug = 'Dokter';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
+    protected static ?string $label = 'User Baru';
+    protected static ?string $navigationLabel = 'User Baru';
+    protected static ?string $slug = 'Register';
 
     public static function form(Form $form): Form
     {
@@ -36,6 +37,11 @@ class DokterResource extends Resource
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('email')->label('RFID')
+                    ->required(),
+                Select::make('user_is')
+                    ->label('Tipe User')
+                    ->placeholder('Pilih tipe user dokter atau pasien')
+                    ->options(['user' => 'Pasien', 'dokter' => 'Dokter'])
                     ->required(),
             ]);
     }
@@ -56,16 +62,13 @@ class DokterResource extends Resource
                 ),
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('email')->label('RFID')->searchable(),
-                Tables\Columns\TextColumn::make('detailDokter.izin_praktek')->label('Izin Praktek')->searchable(),
-                Tables\Columns\TextColumn::make('detailDokter.phone')->label('HP')->searchable(),
-                Tables\Columns\TextColumn::make('detailDokter.alamat')->label('Alamat')->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->label('')->tooltip('Edit dokter'),
-                Tables\Actions\DeleteAction::make()->label('')->tooltip('Hapus dokter'),
+                Tables\Actions\EditAction::make()->label('')->tooltip('Edit user'),
+                Tables\Actions\DeleteAction::make()->label('')->tooltip('Hapus user'),
             ])
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),
@@ -74,22 +77,22 @@ class DokterResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('user_is', 'dokter')->orderBy('created_at', 'desc');
+        return parent::getEloquentQuery()->where('user_is', '-')->orderBy('created_at', 'desc');
     }
     
     public static function getRelations(): array
     {
         return [
-            DetailDokterRelationManager::class
+            //
         ];
     }
     
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDokters::route('/'),
-            'create' => Pages\CreateDokter::route('/create'),
-            'edit' => Pages\EditDokter::route('/{record}/edit'),
+            'index' => Pages\ListRegisters::route('/'),
+            'create' => Pages\CreateRegister::route('/create'),
+            'edit' => Pages\EditRegister::route('/{record}/edit'),
         ];
     }    
 }

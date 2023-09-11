@@ -34,6 +34,7 @@ class UserResource extends Resource
     protected static ?string $navigationGroup = 'Master';
     protected static ?string $navigationLabel = 'Pasien';
     protected static ?string $label = 'Pasien';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

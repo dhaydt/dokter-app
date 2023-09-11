@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\UserResource\Pages;
+namespace App\Filament\Resources\RegisterResource\Pages;
 
-use App\Filament\Resources\UserResource;
+use App\Filament\Resources\RegisterResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListUsers extends ListRecords
+class ListRegisters extends ListRecords
 {
-    protected static string $resource = UserResource::class;
+    protected static string $resource = RegisterResource::class;
 
     protected function getActions(): array
     {
