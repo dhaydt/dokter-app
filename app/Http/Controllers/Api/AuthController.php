@@ -59,8 +59,15 @@ class AuthController extends Controller
         $check = User::where('email', $request->rfid)->first();
 
         if(!$check){
+            $user = new User();
+            $user->name = 'user baru';
+            $user->password = Hash::make('123456');
+            $user->email = $request->rfid;
+            $user->user_is = '-';
+            $user->save();
+
             return response()
-                ->json(['status' => 'error', 'message' => 'RFID tidak ditemukan!', 'rfid' => $request->rfid], 401);
+                ->json(['status' => 'error', 'message' => 'RFID tidak ditemukan, dan sudah didaftarkan', 'rfid' => $request->rfid], 401);
         }else{
             $user_is = $check['user_is'] == 'user' ? 'pasien' : 'dokter';
             $format = [
