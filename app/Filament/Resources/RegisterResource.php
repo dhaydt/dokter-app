@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Hash;
 use stdClass;
 
 class RegisterResource extends Resource
@@ -61,7 +62,8 @@ class RegisterResource extends Resource
                     }
                 ),
                 Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('email')->label('RFID')->searchable(),
+                Tables\Columns\TextColumn::make('RFID (Encrypted)')->function(fn (User $record): string => Hash::make($record->email), position: 'center'),
+                Tables\Columns\TextColumn::make('created_at')->label('Tanggal dibuat')->searchable(),
             ])
             ->filters([
                 //

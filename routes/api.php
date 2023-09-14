@@ -24,6 +24,8 @@ Route::post('/check_rfid', [AuthController::class, 'check']);
 Route::post('/login_dokter', [AuthController::class, 'loginDokter']);
 Route::post('/register', [AuthController::class, 'register']);
 
+Route::get('/new_user', [AuthController::class, 'new_user']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('profile_pasien', [UserController::class, 'profile']);

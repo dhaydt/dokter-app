@@ -12,6 +12,22 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function new_user(Request $request){
+        $data = User::where('user_is', '-')->orderBy('created_at', 'desc')->get();
+        $format = [];
+
+        foreach($data as $d){
+            $item = [
+                'name' => $d['name'],
+                'rfid' => $d['email']
+            ];
+
+            array_push($format, $item);
+        }
+
+        return response()->json(['status' => 'success', 'data' => $format], 200);
+
+    }
     public function register(Request $request){
         $validator = Validator::make($request->all(), [
             'rfid' => 'required',
