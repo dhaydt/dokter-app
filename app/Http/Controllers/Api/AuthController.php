@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function delete_log(){
+        $data = TapLogs::get();
+        foreach($data as $d){
+            $d->delete();
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'data log deleted successfully'], 200);
+    }
     public function new_user(Request $request){
         $data = User::orderBy('created_at', 'desc')->get();
         $tap = TapLogs::orderBy('created_at', 'desc')->get();
