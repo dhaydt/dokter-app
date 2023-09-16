@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     public function new_user(Request $request){
-        $data = User::where('user_is', '-')->orderBy('created_at', 'desc')->get();
+        $data = User::orderBy('created_at', 'desc')->get();
         $format = [];
 
         foreach($data as $d){
@@ -83,7 +83,7 @@ class AuthController extends Controller
             $user->save();
 
             return response()
-                ->json(['status' => 'error', 'message' => 'RFID tidak ditemukan, dan sudah didaftarkan', 'rfid' => $request->rfid], 401);
+                ->json(['status' => false, 'message' => 'RFID tidak ditemukan, dan sudah didaftarkan', 'rfid' => $request->rfid], 401);
         }else{
             $user_is = $check['user_is'] == 'user' ? 'pasien' : 'dokter';
             $format = [
