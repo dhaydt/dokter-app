@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\CPU\Helpers;
 use App\Filament\Resources\RegisterResource\Pages;
 use App\Filament\Resources\RegisterResource\RelationManagers;
 use App\Models\Register;
@@ -62,7 +63,7 @@ class RegisterResource extends Resource
                     }
                 ),
                 Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('RFID (Encrypted)')->function(fn (User $record): string => Hash::make($record->email), position: 'center'),
+                Tables\Columns\TextColumn::make('email')->label('RFID (Encrypted)')->formatStateUsing(fn (string $state): string => Helpers::randomString()),
                 Tables\Columns\TextColumn::make('created_at')->label('Tanggal dibuat')->searchable(),
             ])
             ->filters([

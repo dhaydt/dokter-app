@@ -18,6 +18,17 @@ class Helpers
     return $data;
   }
 
+  public static function randomString($length  = 8)
+  {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[random_int(0, $charactersLength - 1)];
+    }
+    return $randomString;
+  }
+
   public static function error_processor($validator, $code, $status, $message, $data)
   {
     $err_keeper = [];
