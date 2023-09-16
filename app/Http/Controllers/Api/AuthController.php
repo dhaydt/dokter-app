@@ -19,7 +19,7 @@ class AuthController extends Controller
             $d->delete();
         }
 
-        return response()->json(['status' => 'success', 'message' => 'data log deleted successfully'], 200);
+        return response()->json(['status' => 'success', 'data' => [],'message' => 'data log deleted successfully'], 200);
     }
     public function new_user(Request $request){
         $data = User::orderBy('created_at', 'desc')->get();
