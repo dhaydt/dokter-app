@@ -99,7 +99,11 @@ class AuthController extends Controller
             return response()
                 ->json(['status' => false, 'message' => 'RFID tidak ditemukan, dan sudah didaftarkan', 'rfid' => $request->rfid], 401);
         }else{
-            $user_is = $check['user_is'] == 'user' ? 'pasien' : 'dokter';
+            if($check['user_is'] == 'user' || $check['user_is'] == 'dokter'){
+                $user_is = $check['user_is'] == 'user' ? 'pasien' : 'dokter';
+            }else{
+                $user_is = '-';
+            }
             $format = [
                 "name" => $check['name'],
                 "rfid" => $check['email'],
