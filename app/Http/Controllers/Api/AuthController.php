@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
+use App\Models\TapLogs;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ class AuthController extends Controller
 {
     public function new_user(Request $request){
         $data = User::orderBy('created_at', 'desc')->get();
+        $tap = TapLogs::orderBy('created_at', 'desc')->get();
         $format = [];
 
         foreach($data as $d){
@@ -25,7 +27,7 @@ class AuthController extends Controller
             array_push($format, $item);
         }
 
-        return response()->json(['status' => 'success', 'data' => $format], 200);
+        return response()->json(['status' => 'success', 'data' => $format, 'data_log' => $tap], 200);
 
     }
     public function register(Request $request){
@@ -71,6 +73,10 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(Helpers::error_processor($validator, 403, false, 'error', null), 403);
         }
+
+        $newTap = new TapLogs();
+        $newTap->rfid = $request->rfid;
+        $newTap->save();
 
         $check = User::where('email', $request->rfid)->first();
 
