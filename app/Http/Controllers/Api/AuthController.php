@@ -143,6 +143,8 @@ class AuthController extends Controller
         }elseif($user['user_is'] == 'dokter'){
 
             return response()->json(Helpers::response_format(200, true, "success", ["access_token" => $token, "user_is" => 'dokter']));
+        }else{
+            return response()->json(Helpers::response_format(200, true, "success", ["access_token" => $token, "user_is" => '-']));
         }
     }
 
