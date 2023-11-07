@@ -69,14 +69,14 @@ Route::get('generate_code', function(){
     $dokter = DetailDokter::with('user')->get();
 
     foreach($dokter as $d){
-        $d['code_uniq_users'] = $d['user']['code_uniq'];
+        $d['code_uniq_users'] = $d['user']['code_uniq'] ?? '-';
         $d->save();
     }
     
     $pasien = DetailUser::with('user')->get();
 
     foreach($pasien as $p){
-        $p['code_uniq_users'] = $p['user']['code_uniq'];
+        $p['code_uniq_users'] = $p['user']['code_uniq'] ?? '-';
         $p->save();
     }
 
