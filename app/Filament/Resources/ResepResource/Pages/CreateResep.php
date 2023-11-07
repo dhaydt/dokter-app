@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\ResepResource\Pages;
 
+use App\CPU\Helpers;
 use App\Filament\Resources\ResepResource;
 use App\Models\History;
+use App\Models\Obat;
 use App\Models\Resep;
 use Carbon\Carbon;
 use Filament\Pages\Actions;
@@ -61,6 +63,7 @@ class CreateResep extends CreateRecord
     protected function afterCreate(): void
     {
         $resep = Resep::orderBy('created_at', 'desc')->first();
+
         $from = Carbon::createFromFormat('Y-m-d', $resep['tgl_mulai']);
         $to = Carbon::createFromFormat('Y-m-d', $resep['tgl_selesai'])->addDay();
         $difference = $from->diff($to)->days;
@@ -86,5 +89,18 @@ class CreateResep extends CreateRecord
             $history->status = 'pending';
             $history->save();
         }
+
+        $resep['code_uniq'] = Helpers::generateUniq('RB', $resep['id']);
+        $code = [];
+
+        foreach(json_decode($resep['obat_id']) as $d){
+            $obt = Obat::find($d);
+            if($obt){
+                array_push($code, $obt['code_uniq']);
+            }
+        }
+
+        $resep['code_uniq_obat'] = json_encode($code);
+        $resep->save();
     }
 }

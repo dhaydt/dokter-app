@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\DokterResource\Pages;
 
+use App\CPU\Helpers;
 use App\Filament\Resources\DokterResource;
 use App\Models\DetailDokter;
+use App\Models\User;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +29,14 @@ class CreateDokter extends CreateRecord
 
 
         return $data;
+    }
+
+    protected function afterCreate(): void
+    {
+        $dokter = User::where('user_is', 'dokter')->orderBy('created_at', 'desc')->first();
+
+        $dokter['code_uniq'] = Helpers::generateUniq('UD', $dokter['id']);
+        $dokter->save();
     }
 
     protected function getCreatedNotificationTitle(): ?string

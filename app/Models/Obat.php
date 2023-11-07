@@ -9,5 +9,5 @@ class Obat extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["name", "dosis"];
+    protected $fillable = ["name", "dosis", "code_uniq"];
 }

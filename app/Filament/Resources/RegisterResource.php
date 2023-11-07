@@ -36,6 +36,8 @@ class RegisterResource extends Resource
     {
         return $form
             ->schema([
+                TextInput::make('id')
+                    ->required()->disabled(),
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('email')->label('RFID')

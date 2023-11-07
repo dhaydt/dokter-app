@@ -20,7 +20,9 @@ class Resep extends Model
         'perhari',
         'note',
         'status_pengobatan',
-        'status'
+        'status',
+        'code_uniq',
+        'code_uniq_obat'
     ];
 
     /**

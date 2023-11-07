@@ -19,6 +19,7 @@ class DetailUser extends Model
         "berat",
         "tinggi",
         "alergi",
+        "code_uniq_users"
     ];
 
     public function user(){

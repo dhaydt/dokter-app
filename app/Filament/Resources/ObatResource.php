@@ -49,6 +49,7 @@ class ObatResource extends Resource
                         );
                     }
                 ),
+                Tables\Columns\TextColumn::make('code_uniq')->label('Kode Unik')->searchable(),
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('dosis'),
             ])

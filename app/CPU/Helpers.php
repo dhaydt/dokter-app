@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Storage;
 
 class Helpers
 {
+  public static function generateUniq($initial, $id){
+    $code = $initial. str_pad( $id, 3, "0", STR_PAD_LEFT );
+
+    return $code;
+  }
   public static function response_format($code, $status, $message, $data)
   {
     $data = [

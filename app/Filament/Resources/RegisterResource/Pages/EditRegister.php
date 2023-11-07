@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\RegisterResource\Pages;
 
+use App\CPU\Helpers;
 use App\Filament\Resources\RegisterResource;
 use App\Models\DetailDokter;
 use App\Models\DetailUser;
@@ -21,22 +22,24 @@ class EditRegister extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        // dd($data);
-
         return $data;
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
         if($data['user_is'] == 'user'){
+            $data['code_uniq'] = Helpers::generateUniq('UP', $data['id']);
             $detail = new DetailUser();
+            $detail['code_uniq_users'] = $data['code_uniq'];
             $detail->save();
 
             $data['detail_id'] = $detail['id'];
 
 
         }else{
+            $data['code_uniq'] = Helpers::generateUniq('UD', $data['id']);
             $detail = new DetailDokter();
+            $detail['code_uniq_users'] = $data['code_uniq'];
             $detail->save();
 
             $data['detail_id'] = $detail['id'];

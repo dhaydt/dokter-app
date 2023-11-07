@@ -108,6 +108,7 @@ class ResepResource extends Resource
                             ->maxValue(1),
                         Forms\Components\TextInput::make('perhari')
                             ->label('Jarak obat diminum')
+                            ->required()
                             ->hint('satuan: hari')
                             ->placeholder('Ex: 1'),
                         Select::make('status_pengobatan')
@@ -134,6 +135,16 @@ class ResepResource extends Resource
                         );
                     }
                 ),
+                Tables\Columns\TextColumn::make('code_uniq')->label('Kode Unik Resep')->searchable(),
+                // Tables\Columns\TextColumn::make('code_uniq_obat')->label("Kode Unik Obat")->getStateUsing(function ($record) {
+                //      // $obat = [];
+                //      $string = '';
+                //      foreach (json_decode($record->code_uniq_obat) as $index => $o) {
+                //          $string = $string . $o. ', ';
+                //      }
+
+                //     return $string;
+                // })->searchable(),
                 Tables\Columns\TextColumn::make('obat_id')->label("Obat")->getStateUsing(function ($record) {
                     // $obat = [];
                     $string = '';
