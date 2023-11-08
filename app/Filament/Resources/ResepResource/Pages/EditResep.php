@@ -25,11 +25,11 @@ class EditResep extends EditRecord
         return $this->getResource()::getUrl('index');
     }
 
-    protected function mutateFormDataBeforeFill(array $data): array
-    {
-        $data['obat_id'] = json_decode($data['obat_id']);
-        return $data;
-    }
+    // protected function mutateFormDataBeforeFill(array $data): array
+    // {
+    //     $data['obat_id'] = json_decode($data['obat_id']);
+    //     return $data;
+    // }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {

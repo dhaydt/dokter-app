@@ -11,7 +11,6 @@ class Resep extends Model
     use HasFactory;
 
     protected $fillable = [
-        'obat_id',
         'user_id',
         'dokter_id',
         'tgl_mulai',
@@ -22,7 +21,6 @@ class Resep extends Model
         'status_pengobatan',
         'status',
         'code_uniq',
-        'code_uniq_obat'
     ];
 
     /**

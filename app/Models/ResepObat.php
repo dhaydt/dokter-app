@@ -10,7 +10,7 @@ class ResepObat extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['resep_id', 'obat_id', 'tablet'];
+    protected $fillable = ['resep_id', 'obat_id', 'tablet', 'code_uniq_resep', 'code_uniq_obat'];
 
     /**
      * Get the user that owns the ResepObat

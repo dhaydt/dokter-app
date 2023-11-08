@@ -91,16 +91,6 @@ class CreateResep extends CreateRecord
         }
 
         $resep['code_uniq'] = Helpers::generateUniq('RB', $resep['id']);
-        $code = [];
-
-        foreach(json_decode($resep['obat_id']) as $d){
-            $obt = Obat::find($d);
-            if($obt){
-                array_push($code, $obt['code_uniq']);
-            }
-        }
-
-        $resep['code_uniq_obat'] = json_encode($code);
         $resep->save();
     }
 }

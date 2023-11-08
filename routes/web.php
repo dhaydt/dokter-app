@@ -5,6 +5,7 @@ use App\Models\DetailDokter;
 use App\Models\DetailUser;
 use App\Models\Obat;
 use App\Models\Resep;
+use App\Models\ResepObat;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -91,18 +92,17 @@ Route::get('generate_code', function(){
 
     foreach($resep as $r){
         $r['code_uniq']  = 'RB'. str_pad( $r['id'], 3, "0", STR_PAD_LEFT );
-        
-        $drug = json_decode($r['obat_id']);
-        $code_obat = [];
-        foreach($drug as $d){
-            $obt = Obat::find($d);
-            if($obt){
-                array_push($code_obat, $obt['code_uniq']);
-            }
-        }
-        $r['code_uniq_obat'] = json_encode($code_obat);
         $r->save();
     }
+
+    $resep_obat = ResepObat::get();
+
+    foreach($resep_obat as $ro){
+        $ro['code_uniq_resep'] = $ro['resep']['code_uniq'] ?? 'RB000';
+        $ro['code_uniq_obat'] = $ro['obat']['code_uniq'] ?? 'OB000';
+        $ro->save();
+    }
+
 
     return 'code generated successfully!';
 });
