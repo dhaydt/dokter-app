@@ -16,6 +16,7 @@ class History extends Model
         'waktu_minum',
         'img',
         'status',
+        'code_uniq_resep'
     ];
 
     public function resep(){

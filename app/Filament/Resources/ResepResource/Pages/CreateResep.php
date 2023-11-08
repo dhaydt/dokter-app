@@ -75,6 +75,8 @@ class CreateResep extends CreateRecord
         $fromNew = Carbon::createFromFormat('Y-m-d', $resep['tgl_mulai'])->subDays();
         // $resep_id = Resep::orderBy('created_at', 'desc')->first();
 
+        $uniq = Helpers::generateUniq('RB', $resep['id']);
+
         $resep_id = $resep['id'];
         // dd($total);
         for($i = 1; $i < $total; $i++){
@@ -87,10 +89,12 @@ class CreateResep extends CreateRecord
             $history->hari_ke = $i;
             $history->tanggal = $dateList[$i - 1];
             $history->status = 'pending';
+            $history->code_uniq_resep = $uniq;
             $history->save();
         }
 
-        $resep['code_uniq'] = Helpers::generateUniq('RB', $resep['id']);
+        $resep['code_uniq'] = $uniq;
+        $resep['code_uniq_dokter'] = $resep['dokter']['code_uniq'] ?? 'UD000';
         $resep->save();
     }
 }

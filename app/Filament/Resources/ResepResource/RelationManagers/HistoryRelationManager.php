@@ -59,6 +59,8 @@ class HistoryRelationManager extends RelationManager
                     }
                     return 'Invalid resep';
                 })->searchable(),
+                TextColumn::make('code_uniq_resep')
+                    ->label('Kode Unik Resep'),
                 TextColumn::make('hari_ke')
                     ->label('Hari ke-'),
                 TextColumn::make('waktu_minum')

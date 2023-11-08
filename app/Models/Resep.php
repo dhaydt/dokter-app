@@ -21,6 +21,7 @@ class Resep extends Model
         'status_pengobatan',
         'status',
         'code_uniq',
+        'code_uniq_dokter',
     ];
 
     /**
