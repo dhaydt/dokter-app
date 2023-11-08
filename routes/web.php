@@ -94,6 +94,7 @@ Route::get('generate_code', function(){
     foreach($resep as $r){
         $r['code_uniq']  = 'RB'. str_pad( $r['id'], 3, "0", STR_PAD_LEFT );
         $r['code_uniq_dokter']  = $r['dokter']['code_uniq'] ?? 'UD000';
+        $r['code_uniq_user']  = $r['user']['code_uniq'] ?? 'UP000';
         $r->save();
     }
 

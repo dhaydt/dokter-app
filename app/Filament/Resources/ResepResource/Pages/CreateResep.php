@@ -95,6 +95,7 @@ class CreateResep extends CreateRecord
 
         $resep['code_uniq'] = $uniq;
         $resep['code_uniq_dokter'] = $resep['dokter']['code_uniq'] ?? 'UD000';
+        $resep['code_uniq_user'] = $resep['user']['code_uniq'] ?? 'UP000';
         $resep->save();
     }
 }
