@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\CPU\Helpers;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -20,6 +21,7 @@ class User extends Authenticatable implements FilamentUser
      *
      * @var array<int, string>
      */
+
     protected $fillable = [
         'name',
         'email',
@@ -28,6 +30,15 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'code_uniq'
     ];
+
+    protected $appends = [
+        'code_uniq_formatted'
+    ];
+
+    public function getCodeUniqFormattedAttribute()
+    {
+        return Helpers::generateCodeUniq($this->id, $this->user_is);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -51,14 +62,18 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessFilament(): bool
     {
+        // dd($this);
+        // return true;
         return $this->hasRole(['admin', 'dokter']);
     }
 
-    public function detailUser(){
-        return $this->belongsTo(DetailUser::class, 'detail_id');
+    public function detailUser()
+    {
+        return $this->belongsTo(DetailUser::class, 'code_uniq', 'id');
     }
 
-    public function detailDokter(){
-        return $this->belongsTo(DetailDokter::class, 'detail_id');
+    public function detailDokter()
+    {
+        return $this->belongsTo(DetailDokter::class, 'code_uniq', 'id');
     }
 }

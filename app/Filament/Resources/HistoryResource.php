@@ -48,7 +48,7 @@ class HistoryResource extends Resource
                         );
                     }
                 ),
-                Tables\Columns\TextColumn::make('resep.obat_id')->getStateUsing(function($record){
+                Tables\Columns\TextColumn::make('resep.code_uniq_obat')->getStateUsing(function($record){
                     if($record['resep']){
                         // dd($record['resep']['resep_obat']);
                         $obat_id = $record['resep']['resep_obat'];

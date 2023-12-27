@@ -18,13 +18,13 @@ class HistoryRelationManager extends RelationManager
 {
     protected static string $relationship = 'history';
 
-    protected static ?string $recordTitleAttribute = 'resep_id';
+    protected static ?string $recordTitleAttribute = 'code_uniq_resep';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('resep_id')
+                Forms\Components\TextInput::make('code_uniq_resep')
                     ->required()
                     ->maxLength(255),
             ]);

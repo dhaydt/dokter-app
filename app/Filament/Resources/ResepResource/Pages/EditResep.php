@@ -33,7 +33,7 @@ class EditResep extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $histories = History::where('resep_id', $data['id'])->get();
+        $histories = History::where('code_uniq_resep', $data['id'])->get();
         foreach($histories as $h){
             $h->delete();
         }
@@ -58,6 +58,7 @@ class EditResep extends EditRecord
             
             $history = new History();
             $history->resep_id = $resep_id;
+            $history->code_uniq_resep = $resep_id;
             $history->hari_ke = $i;
             $history->tanggal = $dateList[$i - 1];
             $history->status = 'pending';

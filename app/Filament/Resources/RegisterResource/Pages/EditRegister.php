@@ -30,6 +30,7 @@ class EditRegister extends EditRecord
         if($data['user_is'] == 'user'){
             $data['code_uniq'] = Helpers::generateUniq('UP', $data['id']);
             $detail = new DetailUser();
+            $detail['id'] = $data['code_uniq'];
             $detail['code_uniq_users'] = $data['code_uniq'];
             $detail->save();
 
@@ -39,6 +40,7 @@ class EditRegister extends EditRecord
         }else{
             $data['code_uniq'] = Helpers::generateUniq('UD', $data['id']);
             $detail = new DetailDokter();
+            $detail['id'] = $data['code_uniq'];
             $detail['code_uniq_users'] = $data['code_uniq'];
             $detail->save();
 

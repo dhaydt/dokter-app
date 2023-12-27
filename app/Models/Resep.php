@@ -11,6 +11,7 @@ class Resep extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'user_id',
         'dokter_id',
         'tgl_mulai',
@@ -30,23 +31,26 @@ class Resep extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+
+    public $incrementing = false;
+
     public function resep_obat(): HasMany
     {
-        return $this->hasMany(ResepObat::class, 'resep_id', 'id');
+        return $this->hasMany(ResepObat::class, 'code_uniq_resep', 'code_uniq');
     }
 
     public function obat()
     {
-        return $this->belongsTo(Obat::class, 'obat_id');
+        return $this->belongsTo(Obat::class, 'code_uniq_obat', 'code_uniq');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'code_uniq_user', 'code_uniq');
     }
     public function dokter()
     {
-        return $this->belongsTo(User::class, 'dokter_id');
+        return $this->belongsTo(User::class, 'code_uniq_dokter', 'code_uniq');
     }
 
     public function history(){

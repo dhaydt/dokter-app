@@ -9,6 +9,8 @@ class DetailUser extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
+
     protected $fillable = [
         "nik",
         "ttl",
@@ -23,6 +25,6 @@ class DetailUser extends Model
     ];
 
     public function user(){
-        return $this->hasOne(User::class, 'detail_id');
+        return $this->hasOne(User::class, 'code_uniq');
     }
 }

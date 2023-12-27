@@ -17,6 +17,8 @@ class DetailDokter extends Model
         "code_uniq_users"
     ];
 
+    public $incrementing = false;
+
     /**
      * Get the user that owns the DetailDokter
      *

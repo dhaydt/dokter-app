@@ -1,5 +1,6 @@
 <?php
 
+use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\DetailDokter;
 use App\Models\DetailUser;
@@ -9,7 +10,9 @@ use App\Models\Resep;
 use App\Models\ResepObat;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,8 +46,60 @@ Route::get('/seed', function () {
     ]);
     dd('seeded!');
 });
+
 Route::get('/', function () {
     return redirect()->route('filament.auth.login');
+});
+
+Route::get('/primary_detail', function(){
+    $users = DetailUser::all();
+    $dokter = DetailDokter::all();
+
+    foreach ($users as $key => $u) {
+        $u->id = $u['code_uniq_users'];
+        $u->save();
+    }
+    
+    foreach ($dokter as $key => $d) {
+        $d->id = $d['code_uniq_users'];
+        $d->save();
+    }
+
+    dd('generated custom primary details');
+});
+
+Route::get('/history_assign', function(){
+    $history = History::all();
+
+    foreach($history as $h){
+        $h->resep_id = $h['code_uniq_resep'];
+        $h->save();
+    }
+
+    dd('history assigned successfully');
+});
+
+Route::get('/primary_obat', function(){
+    $obat = Obat::all();
+    $resep = Resep::all();
+
+    foreach ($obat as $key => $o) {
+        $o->id = $o['code_uniq'];
+        $o->save();
+    }
+    
+    foreach ($resep as $key => $r) {
+        $r->id = $r['code_uniq'];
+        $r->save();
+    }
+
+    dd('id primary obat dan resep was changed');
+});
+
+Route::get('assign_admin', function(){
+    $user = User::where('name', 'admin')->first();
+    // $role = Role::create(['name' => 'admin']);
+    $user->assignRole('admin');
 });
 
 Route::post('change-password', [Controller::class, 'changePassword'])->name('password');

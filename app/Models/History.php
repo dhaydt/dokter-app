@@ -20,6 +20,6 @@ class History extends Model
     ];
 
     public function resep(){
-        return $this->belongsTo(Resep::class, 'resep_id', 'id');
+        return $this->belongsTo(Resep::class, 'code_uniq_resep', 'id');
     }
 }

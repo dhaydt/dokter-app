@@ -25,6 +25,45 @@ class CreateResep extends CreateRecord
         return 'Resep created successfully!';
     }
 
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        // dd($data);
+        $resep = Resep::orderBy('id', 'desc')->first();
+        $number = str_replace('RB', '', $resep['id']);
+        $number = $number + 1;
+
+        $id = Helpers::generateUniq('RB', $number);
+
+        $check = Resep::find($id);
+
+        if($check){
+
+            for($i = 1; isset($check); $i++){
+                $id = Helpers::generateUniq('RB', $number + $i);
+
+                $checked = checkDuplicate($id);
+                if($checked == false){
+                    break;
+                }
+            }
+    
+            function checkDuplicate($id){
+                $check = Resep::find($id);
+
+                if($check){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+
+        $data['id'] = $id;
+        $data['code_uniq'] = $id;
+
+        return $data;
+    }
+
     // protected function mutateFormDataBeforeCreate(array $data): array
     // {
     //     // $data['obat_id'] = json_encode($data['obat_id']);
@@ -75,7 +114,7 @@ class CreateResep extends CreateRecord
         $fromNew = Carbon::createFromFormat('Y-m-d', $resep['tgl_mulai'])->subDays();
         // $resep_id = Resep::orderBy('created_at', 'desc')->first();
 
-        $uniq = Helpers::generateUniq('RB', $resep['id']);
+        $uniq = $resep['id'];
 
         $resep_id = $resep['id'];
         // dd($total);
@@ -93,7 +132,9 @@ class CreateResep extends CreateRecord
             $history->save();
         }
 
-        $resep['code_uniq'] = $uniq;
+        // dd($resep);
+
+        $resep['code_uniq'] = $resep['id'];
         $resep['code_uniq_dokter'] = $resep['dokter']['code_uniq'] ?? 'UD000';
         $resep['code_uniq_user'] = $resep['user']['code_uniq'] ?? 'UP000';
         $resep->save();

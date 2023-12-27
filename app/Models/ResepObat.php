@@ -19,10 +19,10 @@ class ResepObat extends Model
      */
     public function resep(): BelongsTo
     {
-        return $this->belongsTo(Resep::class,'resep_id');
+        return $this->belongsTo(Resep::class,'code_uniq_resep', 'id');
     }
 
     public function obat(){
-        return $this->belongsTo(Obat::class, 'obat_id');
+        return $this->belongsTo(Obat::class, 'code_uniq_obat', 'id');
     }
 }

@@ -80,4 +80,16 @@ class Helpers
 
     return $imageName;
   }
+
+  public static function generateCodeUniq($id, $user_is){
+    if($user_is == 'admin'){
+      return 'UA' . sprintf('%03d', $id);
+    }elseif($user_is == 'dokter'){
+      return 'UD' . sprintf('%03d', $id);
+    }elseif($user_is == 'user'){
+      return 'UP' . sprintf('%03d', $id);
+    }else{
+      return 'U' . sprintf('%03d', $id);
+    }
+  }
 }

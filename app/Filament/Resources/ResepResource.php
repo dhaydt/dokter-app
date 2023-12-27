@@ -47,13 +47,13 @@ class ResepResource extends Resource
         $user = User::where('user_is', 'user')->get();
         $newUser = [];
         foreach ($user as $u) {
-            $newUser[$u['id']] = $u['name'] . ', ' . $u['email'];
+            $newUser[$u['code_uniq']] = $u['name'] . ', ' . $u['email'];
         }
 
         $dokter = User::where('user_is', 'dokter')->get();
         $newDokter = [];
         foreach ($dokter as $d) {
-            $newDokter[$d['id']] = $d['name'] . ', ' . $d['email'];
+            $newDokter[$d['code_uniq']] = $d['name'] . ', ' . $d['email'];
         }
 
         return $form
@@ -61,12 +61,12 @@ class ResepResource extends Resource
                 Card::make()->schema(
                     [
                         TextInput::make('id')->label('ID Resep')->disabled()->hiddenOn('create'),
-                        Select::make('user_id')
+                        Select::make('code_uniq_user')
                             ->label('Pasien')
                             ->placeholder('Pilih pasien!')
                             ->options($newUser)
                             ->required(),
-                        Select::make('dokter_id')
+                        Select::make('code_uniq_dokter')
                             ->label('Dokter')
                             ->placeholder('Select Doctor!')
                             ->options($newDokter)
@@ -83,7 +83,7 @@ class ResepResource extends Resource
                                     ->label('Jenis Obat')
                                     ->relationship()
                                     ->schema([
-                                        Select::make('obat_id')
+                                        Select::make('code_uniq_obat')
                                             ->label('Nama Obat')
                                             ->placeholder('Pilih Obat!')
                                             ->options($newObat)
@@ -145,7 +145,7 @@ class ResepResource extends Resource
 
                 //     return $string;
                 // })->searchable(),
-                Tables\Columns\TextColumn::make('obat_id')->label("Obat")->getStateUsing(function ($record) {
+                Tables\Columns\TextColumn::make('code_uniq_obat')->label("Obat")->getStateUsing(function ($record) {
                     // $obat = [];
                     $string = '';
                     foreach ($record->resep_obat as $index => $o) {

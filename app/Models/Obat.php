@@ -9,5 +9,7 @@ class Obat extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["name", "dosis", "code_uniq"];
+    protected $fillable = ["id", "name", "dosis", "code_uniq"];
+
+    public $incrementing = false;
 }
