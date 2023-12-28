@@ -64,8 +64,8 @@ class RegisterResource extends Resource
                         );
                     }
                 ),
-                Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('email')->label('RFID (Encrypted)')->formatStateUsing(fn (string $state): string => Helpers::randomString()),
+                Tables\Columns\TextColumn::make('name')->label('Nama')->searchable(),
+                // Tables\Columns\TextColumn::make('email')->label('RFID (Encrypted)')->formatStateUsing(fn (string $state): string => Helpers::randomString()),
                 Tables\Columns\TextColumn::make('created_at')->label('Tanggal dibuat')->searchable(),
             ])
             ->filters([

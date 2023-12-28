@@ -106,7 +106,7 @@ class UserController extends Controller
         $role = Helpers::checkRole($user);
         if ($role == 'user') {
             $data = History::with('resep')->whereHas('resep', function($q) use($user){
-                $q->where('user_id', $user['id']);
+                $q->where('code_uniq_user', $user['code_uniq']);
             })->get();
 
             $formatData = [];
@@ -135,7 +135,7 @@ class UserController extends Controller
         $role = Helpers::checkRole($user);
         if ($role == 'user') {
             $user = User::with('detailUser')->find($user['id']);
-            $data = Resep::with('history')->where('user_id', $user['id'])->get();
+            $data = Resep::with('history')->where('code_uniq_user', $user['code_uniq'])->get();
             $formatUser = [
                 'name' => $user['name'],
                 'nik' => $user['detailUser']['nik'],
@@ -152,7 +152,7 @@ class UserController extends Controller
             foreach($data as $d){
                 $dat = [
                     'id' => $d['id'],
-                    'dokter' => User::find($d['dokter_id'])['name'],
+                    'dokter' => User::where('code_uniq', $d['code_uniq_dokter'])->first()['name'],
                     'tanggal_mulai' => $d['tgl_mulai'],
                     'tanggal_selesai' => $d['tgl_selesai'],
                     'dosis' => $d['dosis'].' X '.$d['perhari'].' hari',
@@ -172,7 +172,7 @@ class UserController extends Controller
         $role = Helpers::checkRole($user);
         if ($role == 'user') {
             $user = User::with('detailUser')->find($user['id']);
-            $data = Resep::with('history', 'resep_obat')->where(['user_id' => $user['id'], 'status' => 'aktif'])->orderBy('created_at', 'desc')->first();
+            $data = Resep::with('history', 'resep_obat')->where(['code_uniq_user' => $user['code_uniq'], 'status' => 'aktif'])->orderBy('created_at', 'desc')->first();
             $obat = [];
             // return $data;
             if($data){
