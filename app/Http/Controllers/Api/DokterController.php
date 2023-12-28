@@ -59,7 +59,7 @@ class DokterController extends Controller
         if ($role == 'dokter') {
             $user = User::with('detailDokter')->find($user['id']);
 
-            $resep = Resep::with('user')->where('dokter_id', $user['id'])->orderBy('created_at', 'desc')->get();
+            $resep = Resep::with('user')->where('code_uniq_dokter', $user['code_uniq'])->orderBy('created_at', 'desc')->get();
             $formatResep = [];
 
             foreach($resep as $r){

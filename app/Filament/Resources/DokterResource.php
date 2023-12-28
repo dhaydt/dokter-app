@@ -56,7 +56,7 @@ class DokterResource extends Resource
                 ),
                 Tables\Columns\TextColumn::make('code_uniq_formatted')->label('Kode Unik')->searchable(),
                 Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('email')->label('RFID')->searchable(),
+                // Tables\Columns\TextColumn::make('email')->label('RFID')->searchable(),
                 Tables\Columns\TextColumn::make('detailDokter.izin_praktek')->label('Izin Praktek')->searchable(),
                 Tables\Columns\TextColumn::make('detailDokter.phone')->label('HP')->searchable(),
                 Tables\Columns\TextColumn::make('detailDokter.alamat')->label('Alamat')->searchable(),
